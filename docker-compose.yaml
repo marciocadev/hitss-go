@@ -1,0 +1,90 @@
+version: '3.1'
+
+services:
+  go-db:
+    container_name: go-db
+    image: go-db
+    restart: on-failure
+    build:
+      context: ./go-db
+      target: prd
+    volumes:
+      - ./go-db/src:/work
+    networks:
+      - hitss-network
+    depends_on:
+      - rabbitmq
+      - database
+    environment:
+      - DB_USER=${USER}
+      - DB_PASSWORD=${PWD}
+      - DB_NAME=${DBNAME}
+      - RMQ_URL=amqp://${USER}:${PWD}@rabbitmq:5672/
+      - QUEUE_INSERT=${QUEUE_INSERT}
+
+  go-api:
+    container_name: go-api
+    image: go-api
+    restart: on-failure
+    build:
+      context: ./go-api
+      target: prd
+    volumes:
+      - ./go-api/src:/work
+    ports:
+      - 8081:8080
+      - 8082:443
+    networks:
+      - hitss-network
+    depends_on:
+      - rabbitmq
+    environment:
+      - RMQ_URL=amqp://${USER}:${PWD}@rabbitmq:5672/
+      - QUEUE_INSERT=${QUEUE_INSERT}
+
+  rabbitmq:
+    container_name: rabbitmq
+    hostname: rabbit
+    image: rabbitmq:3.12.6-management-alpine
+    ports:
+      - 15672:15672
+      - 5672:5672
+    healthcheck:
+      test: [ "CMD", "nc", "-z", "localhost", "5672" ]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+    networks:
+      - hitss-network
+
+  database:
+    container_name: postgres
+    hostname: postgres
+    image: postgres:16.0-alpine3.18
+    restart: always
+    environment:
+      - POSTGRES_USER=${USER}
+      - POSTGRES_PASSWORD=${PWD}
+      - POSTGRES_DB=${DBNAME}
+    ports:
+      - 5432:5432
+    volumes:
+      - ./scripts:/docker-entrypoint-initdb.d/
+    networks:
+      - hitss-network
+
+  adminer:
+    image: adminer
+    restart: always
+    environment:
+      - ADMINER_DEFAULT_SERVER=database
+    depends_on:
+      - database
+    ports:
+      - 8083:8080
+    networks:
+      - hitss-network
+
+networks:
+  hitss-network:
+    driver: bridge

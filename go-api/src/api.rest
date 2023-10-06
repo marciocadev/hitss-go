@@ -1,0 +1,13 @@
+### Insert Client
+POST http://localhost:8081/cliente
+ContentType: application/json
+
+{
+  "nome": "Marcio",
+  "sobrenome": "Almeida",
+  "contato": "Ale",
+  "endereco": "Rua Dr. Guapiaçu",
+  "nascimento": "10/07/1973",
+  "cpf": "028.460.217-59"
+}
+
