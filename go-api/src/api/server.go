@@ -2,6 +2,7 @@ package api
 
 import (
 	"crypto/md5"
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -15,16 +16,60 @@ type Server struct {
 	*mux.Router
 }
 
-func NewServer() *Server {
+func NewServer(db *sql.DB) *Server {
 	s := &Server{
 		Router: mux.NewRouter(),
 	}
-	s.routes()
+	s.routes(db)
 	return s
 }
 
-func (s *Server) routes() {
+func (s *Server) routes(db *sql.DB) {
 	s.HandleFunc("/cliente", s.createClient()).Methods("POST")
+	s.HandleFunc("/cliente", s.getAllClients(db)).Methods("GET")
+	s.HandleFunc("/cliente/{id}", s.getClientByID(db)).Methods("GET")
+	s.HandleFunc("/cliente/cpf/{cpf}", s.getClientByCPF(db)).Methods("GET")
+	s.HandleFunc("/cliente/{id}", s.removeClient()).Methods("DELETE")
+}
+
+func (s *Server) getClientByCPF(db *sql.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		cpfStr, _ := mux.Vars(r)["cpf"]
+		cpfStr = removeSpecialCharacters(cpfStr)
+		client := GetClientByCPF(db, cpfStr)
+
+		w.Header().Set("Content-Type", "application/json")
+		if err := json.NewEncoder(w).Encode(client); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+	}
+}
+
+func (s *Server) getClientByID(db *sql.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		idStr, _ := mux.Vars(r)["id"]
+		client := GetClientByID(db, idStr)
+
+		w.Header().Set("Content-Type", "application/json")
+		if err := json.NewEncoder(w).Encode(client); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+	}
+}
+
+func (s *Server) getAllClients(db *sql.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+
+		todos := GetAllClients(db)
+
+		w.Header().Set("Content-Type", "application/json")
+		if err := json.NewEncoder(w).Encode(todos); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+	}
 }
 
 func removeSpecialCharacters(s string) string {
@@ -55,9 +100,25 @@ func (s *Server) createClient() http.HandlerFunc {
 		c.CPF = removeSpecialCharacters(c.CPF)
 		c.ID = createID(c.CPF)
 
-		StartPublishing(c)
+		PublishingInsertNewClient(c)
 
 		result := fmt.Sprintf("Cliente %s enviado para o cadastro", c.ID)
+
+		w.Header().Set("Content-Type", "application/json")
+		if err := json.NewEncoder(w).Encode(result); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+	}
+}
+
+func (s *Server) removeClient() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		idStr, _ := mux.Vars(r)["id"]
+
+		PublishingDeleteClient(idStr)
+
+		result := fmt.Sprintf("Cliente %s enviado para ser removido", idStr)
 
 		w.Header().Set("Content-Type", "application/json")
 		if err := json.NewEncoder(w).Encode(result); err != nil {

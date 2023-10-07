@@ -1,0 +1,28 @@
+### REST Client plug-in
+
+### Insert Client
+POST https://localhost:8081/cliente
+ContentType: application/json
+
+{
+  "nome": "Marcio",
+  "sobrenome": "Almeida",
+  "contato": "Ale",
+  "endereco": "Av. Presidente Vargas, 1",
+  "dtNascimento": "10/07/1973",
+  "cpf": "123.456.789-10"
+}
+
+
+### Insert Second Client
+POST https://localhost:8081/cliente
+ContentType: application/json
+
+{
+  "nome": "Sofia",
+  "sobrenome": "Almeida",
+  "contato": "Ale",
+  "endereco": "Av. Presidente Vargas, 1",
+  "dtNascimento": "14/10/2011",
+  "cpf": "987.654.321-10"
+}

@@ -1,0 +1,13 @@
+### REST Client plug-in
+
+### Get All Clients
+GET https://localhost:8081/cliente
+ContentType: application/json
+
+### Get Client by ID
+GET https://localhost:8081/cliente/432f45b44c432414d2f97df0e5743818
+ContentType: application/json
+
+### Get Client by CPF
+GET https://localhost:8081/cliente/cpf/987.654.321-10
+ContentType: application/json

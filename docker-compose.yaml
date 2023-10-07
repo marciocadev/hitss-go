@@ -21,6 +21,8 @@ services:
       - DB_NAME=${DBNAME}
       - RMQ_URL=amqp://${USER}:${PWD}@rabbitmq:5672/
       - QUEUE_INSERT=${QUEUE_INSERT}
+      - QUEUE_DELETE=${QUEUE_DELETE}
+      - QUEUE_UPDATE=${QUEUE_UPDATE}
 
   go-api:
     container_name: go-api
@@ -39,8 +41,13 @@ services:
     depends_on:
       - rabbitmq
     environment:
+      - DB_USER=${USER}
+      - DB_PASSWORD=${PWD}
+      - DB_NAME=${DBNAME}
       - RMQ_URL=amqp://${USER}:${PWD}@rabbitmq:5672/
       - QUEUE_INSERT=${QUEUE_INSERT}
+      - QUEUE_DELETE=${QUEUE_DELETE}
+      - QUEUE_UPDATE=${QUEUE_UPDATE}
 
   rabbitmq:
     container_name: rabbitmq
