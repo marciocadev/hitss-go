@@ -30,6 +30,7 @@ func (s *Server) routes(db *sql.DB) {
 	s.HandleFunc("/cliente/{id}", s.getClientByID(db)).Methods("GET")
 	s.HandleFunc("/cliente/cpf/{cpf}", s.getClientByCPF(db)).Methods("GET")
 	s.HandleFunc("/cliente/{id}", s.removeClient()).Methods("DELETE")
+	s.HandleFunc("/cliente/{id}", s.updateClient()).Methods("PUT")
 }
 
 func (s *Server) getClientByCPF(db *sql.DB) http.HandlerFunc {
@@ -48,8 +49,8 @@ func (s *Server) getClientByCPF(db *sql.DB) http.HandlerFunc {
 
 func (s *Server) getClientByID(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		idStr, _ := mux.Vars(r)["id"]
-		client := GetClientByID(db, idStr)
+		id, _ := mux.Vars(r)["id"]
+		client := GetClientByID(db, id)
 
 		w.Header().Set("Content-Type", "application/json")
 		if err := json.NewEncoder(w).Encode(client); err != nil {
@@ -114,11 +115,33 @@ func (s *Server) createClient() http.HandlerFunc {
 
 func (s *Server) removeClient() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		idStr, _ := mux.Vars(r)["id"]
+		id, _ := mux.Vars(r)["id"]
 
-		PublishingDeleteClient(idStr)
+		PublishingDeleteClient(id)
 
-		result := fmt.Sprintf("Cliente %s enviado para ser removido", idStr)
+		result := fmt.Sprintf("Cliente %s enviado para ser removido", id)
+
+		w.Header().Set("Content-Type", "application/json")
+		if err := json.NewEncoder(w).Encode(result); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+	}
+}
+
+func (s *Server) updateClient() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		id, _ := mux.Vars(r)["id"]
+
+		var c Client
+		if err := json.NewDecoder(r.Body).Decode(&c); err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		PublishingUpdateClient(id, c)
+
+		result := fmt.Sprintf("Cliente %s enviado para ser atualizado", id)
 
 		w.Header().Set("Content-Type", "application/json")
 		if err := json.NewEncoder(w).Encode(result); err != nil {

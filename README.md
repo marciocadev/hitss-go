@@ -51,6 +51,9 @@ Este endpoint peermite que o cliente recupere seu dados (incluindo seu ID) busca
 ### DELETE - /cliente/{id}
 Este endpoint remove um cliente específico da base de dados pelo ID do cliente
 
+### UPDATE - /cliente/{id}
+Este endpoint atualiza um cliente a partir do ID informado
+
 ## Scripts
 A pasta scripts possuem scripts para a definição do banco de dados que será criádo no `Postgres` na criação do projeto
 

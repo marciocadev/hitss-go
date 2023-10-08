@@ -1,0 +1,9 @@
+### REST Client plug-in
+
+### Update Client
+PUT https://localhost:8081/cliente/432f45b44c432414d2f97df0e5743818
+ContentType: application/json
+
+{
+  "sobrenome": "Cruz de Almeida"
+}

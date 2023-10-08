@@ -50,6 +50,42 @@ func GetRabbitMQQueue(ch *amqp.Channel, queueName string) {
 	log.Println("Successfully declare a queue")
 }
 
+func ConsumeUpdateClient(ch *amqp.Channel, queueName string) {
+	msgs, err := ch.Consume(
+		queueName,
+		"",
+		false,
+		false,
+		false,
+		false,
+		nil,
+	)
+	if err != nil {
+		log.Fatalf("%s: %v", "Failed to delivery the message", err)
+	}
+
+	db := OpenConn()
+	defer db.Close()
+
+	for d := range msgs {
+		log.Printf("Received a message: %s", d.Body)
+		c := Client{}
+		err := json.Unmarshal([]byte(d.Body), &c)
+		if err != nil {
+			log.Fatalf("Error in JSON unmarshalling from json marshalled object: %v", err)
+			return
+		}
+
+		stmt, params := GetUpdateStatement(db, c)
+		defer stmt.Close()
+
+		UpdateClient(stmt, params)
+
+		// if success remove from queue
+		d.Ack(true)
+	}
+}
+
 func ConsumeDeleteClient(ch *amqp.Channel, queueName string) {
 	msgs, err := ch.Consume(
 		queueName,

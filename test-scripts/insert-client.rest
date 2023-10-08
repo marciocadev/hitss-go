@@ -19,10 +19,10 @@ POST https://localhost:8081/cliente
 ContentType: application/json
 
 {
-  "nome": "Sofia",
-  "sobrenome": "Almeida",
-  "contato": "Ale",
-  "endereco": "Av. Presidente Vargas, 1",
-  "dtNascimento": "14/10/2011",
+  "nome": "Alessandra",
+  "sobrenome": "Nunes",
+  "contato": "Marcio",
+  "endereco": "Av. Rio Branco, 1",
+  "dtNascimento": "26/09/1974",
   "cpf": "987.654.321-10"
 }
