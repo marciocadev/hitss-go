@@ -12,8 +12,4 @@ COPY --from=dev /work/app /
 RUN mkdir /cert
 COPY --from=dev /work/cert /cert
 
-# RUN apk upgrade --update-cache --available && \
-#   apk add openssl && \
-#   rm -rf /var/cache/apk/*
-
 CMD ["/bin/sh", "-c", "/app"]
