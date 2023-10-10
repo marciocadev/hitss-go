@@ -41,7 +41,7 @@ Este endpoint recebe um objeto cliente conforme o exemplo abaixo e persiste no b
   "contato": "Ale",
   "endereco": "Av. Presidente Vargas, 1",
   "dtNascimento": "10/07/1973",
-  "cpf": "123.456.789-10"
+  "cpf": "259.224.648-76"
 }
 ```
 
