@@ -5,7 +5,9 @@ Para construir este projeto é necessário configurar algumas variáveis de ambi
   * `guest`
 * PWD - senha tanto to RabbitMQ quando do Postgres, por padrão estou usando o que é configurado automaticamente no RabbitMQ      
   * `guest`
-* QUEUE_INSERT - nome da queue responsável por transmitir os dados que serã inserids noo banco de dados
+* QUEUE_INSERT - nome da queue responsável por transmitir os dados que serão inseridos no banco de dados
+* QUEUE_DELETE - nome da queue responsável por transmitir os dados do cliente que será excluido do banco de dados
+* QUEUE_UPDATE - nome da queue responsável por transmitir os dados que serão atualizados no banco de dados
 * DBNAME - nome do banco de dadoos no Postgress
 
 Uma vez que estas variáveis estejam definidas podemos executar os comandos abaixo para construir e executar os recursos necessários para o teste
