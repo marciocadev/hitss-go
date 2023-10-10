@@ -8,7 +8,7 @@ Para construir este projeto é necessário configurar algumas variáveis de ambi
 * QUEUE_INSERT - nome da queue responsável por transmitir os dados que serão inseridos no banco de dados
 * QUEUE_DELETE - nome da queue responsável por transmitir os dados do cliente que será excluido do banco de dados
 * QUEUE_UPDATE - nome da queue responsável por transmitir os dados que serão atualizados no banco de dados
-* DBNAME - nome do banco de dadoos no Postgress
+* DBNAME - nome do banco de dados no Postgress
 
 Uma vez que estas variáveis estejam definidas podemos executar os comandos abaixo para construir e executar os recursos necessários para o teste
 ```bash
@@ -72,7 +72,7 @@ A pasta scripts possuem scripts para a definição do banco de dados que será c
 Basicamente será criado um schema `hitss` e a tabela `cliente` neste schema
 
 ## Fazendo requisições no projeto
-Mesmo rodando localmente este projetoo foi criado para receber requisições HTTPS, desta forma eu recomendo utilizar o plug-in para o vscode chamado `REST Client`
+Mesmo rodando localmente este projeto foi criado para receber requisições HTTPS, desta forma eu recomendo utilizar o plug-in para o vscode chamado `REST Client`
 
 Estou deixando um pasta chamada `test-scripts` com alguns exemplos de testes prontos para uso
 
