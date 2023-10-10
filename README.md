@@ -26,6 +26,12 @@ $ USER=guest PWD=guest QUEUE_INSERT=insert QUEUE_DELETE=delete QUEUE_UPDATE=upda
 Este endpoint recebe um objeto cliente conforme o exemplo abaixo e persiste no banco de dados
 > O ID é formado gerando um hash a partir do CPF sem os caracteres especiais, desta forma garante um ID único e não expoem um dados sensível do cliente
 
+> Segue alguns CPF's gerados para teste
+> 259.224.648-76
+> 292.285.882-09
+> 385.825.141-07
+> 838.519.863-69
+
 ```
 {
   "nome": "Marcio",

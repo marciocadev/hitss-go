@@ -10,7 +10,7 @@ ContentType: application/json
   "contato": "Ale",
   "endereco": "Av. Presidente Vargas, 1",
   "dtNascimento": "10/07/1973",
-  "cpf": "123.456.789-10"
+  "cpf": "259.224.648-76"
 }
 
 
@@ -24,5 +24,5 @@ ContentType: application/json
   "contato": "Marcio",
   "endereco": "Av. Rio Branco, 1",
   "dtNascimento": "26/09/1974",
-  "cpf": "987.654.321-10"
+  "cpf": "259.224.648-76"
 }

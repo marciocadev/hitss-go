@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/gorilla/mux"
@@ -73,15 +74,6 @@ func (s *Server) getAllClients(db *sql.DB) http.HandlerFunc {
 	}
 }
 
-func removeSpecialCharacters(s string) string {
-	return strings.Map(func(r rune) rune {
-		if r >= '0' && r <= '9' {
-			return r
-		}
-		return -1
-	}, s)
-}
-
 func createID(s string) string {
 	hasher := md5.New()
 	io.WriteString(hasher, s)
@@ -99,6 +91,10 @@ func (s *Server) createClient() http.HandlerFunc {
 		}
 
 		c.CPF = removeSpecialCharacters(c.CPF)
+		if !cpfValidate(c.CPF) {
+			http.Error(w, "CPF inválido", http.StatusBadRequest)
+			return
+		}
 		c.ID = createID(c.CPF)
 
 		PublishingInsertNewClient(c)
@@ -149,4 +145,70 @@ func (s *Server) updateClient() http.HandlerFunc {
 			return
 		}
 	}
+}
+
+func removeSpecialCharacters(s string) string {
+	return strings.Map(func(r rune) rune {
+		if r >= '0' && r <= '9' {
+			return r
+		}
+		return -1
+	}, s)
+}
+
+func cpfValidate(cpf string) bool {
+	// CPF deve ter 11 dígitos
+	if len(cpf) != 11 {
+		return false
+	}
+
+	// Verifique se todos os dígitos são iguais, o que tornaria o CPF inválido
+	if cpf == "00000000000" || cpf == "11111111111" || cpf == "22222222222" ||
+		cpf == "33333333333" || cpf == "44444444444" || cpf == "55555555555" ||
+		cpf == "66666666666" || cpf == "77777777777" || cpf == "88888888888" ||
+		cpf == "99999999999" {
+		return false
+	}
+
+	// valida primeiro dígito
+	cpfd1 := cpf[:9]
+	soma := 0
+	for i := 0; i < len(cpfd1); i++ {
+		num, err := strconv.Atoi(string(cpfd1[i]))
+		if err != nil {
+			return false
+		}
+		soma += num * (i + 1)
+	}
+	d1 := soma % 11
+	if d1 == 10 {
+		d1 = 0
+	}
+
+	// calcula segundo dígito
+	cpfd2 := cpf[:10]
+	soma = 0
+	for i := 0; i < len(cpfd2); i++ {
+		num, err := strconv.Atoi(string(cpfd2[i]))
+		if err != nil {
+			return false
+		}
+		soma += num * (i)
+	}
+	d2 := soma % 11
+	if d2 == 10 {
+		d2 = 0
+	}
+
+	// se o primeiro dígito é diferente retorna false
+	if string(cpf[9]) != strconv.Itoa(d1) {
+		return false
+	}
+	// se o segundo dígito é diferente retorna false
+	if string(cpf[10]) != strconv.Itoa(d2) {
+		return false
+	}
+
+	// Se passou por todas as verificações, o CPF é válido
+	return true
 }
