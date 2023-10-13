@@ -5,9 +5,9 @@ GET https://localhost:8081/cliente
 ContentType: application/json
 
 ### Get Client by ID
-GET https://localhost:8081/cliente/432f45b44c432414d2f97df0e5743818
+GET https://localhost:8081/cliente/533601073cfc111e4fa32b5e9a99f98c
 ContentType: application/json
 
 ### Get Client by CPF
-GET https://localhost:8081/cliente/cpf/987.654.321-10
+GET https://localhost:8081/cliente/cpf/292.285.882-09
 ContentType: application/json

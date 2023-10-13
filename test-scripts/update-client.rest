@@ -1,7 +1,7 @@
 ### REST Client plug-in
 
 ### Update Client
-PUT https://localhost:8081/cliente/432f45b44c432414d2f97df0e5743818
+PUT https://localhost:8081/cliente/533601073cfc111e4fa32b5e9a99f98c
 ContentType: application/json
 
 {
